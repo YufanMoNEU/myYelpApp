@@ -1,0 +1,2870 @@
+
+
+<!--
+  =============================Section Break =============================
+-->
+
+<!-- CUSTOMER USER is viewing his profile -->
+<section
+  class="light-bg booking-details_wrap"
+  ng-if="loggedUser._id == user._id && userType == 'CUSTOMER'"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 responsive-wrap">
+        <div class="follow">
+          <div class="follow-img" style="text-align: center">
+            <br />
+            <br />
+            <img
+              src="../images/follow-img.jpg"
+              class="img-fluid"
+              style="border-radius: 50%;"
+              alt="#"
+            />
+            <br />
+            <br />
+            <h6>{{ user.username | uppercase }}</h6>
+            <span>{{ user.address.city | uppercase }}</span>
+          </div>
+          <br />
+
+          <ul class="social-counts" ng-if="!followedByLoading">
+            <li>
+              <h6>{{ reviews.length }}</h6>
+              <span>Reviews</span>
+            </li>
+            <li>
+              <h6>{{ followedBy.length }}</h6>
+              <span>Followers</span>
+            </li>
+            <li>
+              <h6>{{ follows.length }}</h6>
+              <span>Followed</span>
+            </li>
+            <li>
+              <h6>{{ favourites.length }}</h6>
+              <span>Favourites</span>
+            </li>
+            <li>
+              <button class="btn btn-primary" ng-click="updateUser()">Update Info</button>
+            </li>
+          </ul>
+          <div class="spinner" ng-if="followedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 responsive-wrap">
+        <div class="main-block light-bg">
+          <h5>Reviews</h5>
+          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">
+            <hr />
+            <div class="customer-content">
+              <div class="customer-review">
+                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>
+                <!--
+                  <span></span> <span></span> <span></span> <span></span>
+                  <span class="round-icon-blank"></span>
+                -->
+                <p>Reviewed on {{ review.time_created | date: "short" }}</p>
+              </div>
+              <div class="customer-rating">{{ review.rating }}</div>
+            </div>
+            <br />
+            <p class="customer-text">{{ review.text }}</p>
+            <br />
+             &nbsp; &nbsp;
+            &nbsp; &nbsp;
+            <a ng-click="updateReview(review,$index)"
+              ><span class="icon-pencil"></span
+            ></a>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            <a ng-click="deleteReview(review)"
+              ><span class="icon-trash"></span
+            ></a>
+          </div>
+          <div class="spinner" ng-if="reviewsLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Follows</h5>
+          <div ng-repeat="follow in follows" ng-if="!followsLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ follow.user.username }}</div>
+              <div class="col-md-4">{{ follow.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="unfollowUser(follow.user,follow)"
+                >
+                  Unfollow
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="followsLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Followed By</h5>
+          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ followed.user.username }}</div>
+              <div class="col-md-4">{{ followed.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(followed.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="followedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Favourites</h5>
+          <div
+            ng-repeat="favourite in loggedFavourites"
+            ng-if="!favouritesLoading"
+          >
+            <hr />
+            <div class="row">
+              <div class="col-md-3">{{ favourite[0].name }}</div>
+              <div class="col-md-3">{{ favourite[0].location.city }}</div>
+              <div class="col-md-3">
+                <button
+                  class="btn btn-primary"
+                  ng-click="viewRestaurant(favourite[0])"
+                >
+                  view Restaurant
+                </button>
+              </div>
+              <div class="col-md-3">
+                <button
+                  class="btn btn-danger"
+                  ng-click="unFavouriteRestaurant(favourite[0],$index)"
+                >
+                  Unlike
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="favouritesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- CUSTOMER USER is viewing Another CUSTOMER USER PROFILE -->
+<section
+  class="light-bg booking-details_wrap"
+  ng-if="loggedUser._id != user._id && userType == 'CUSTOMER' && loggedUserType == 'CUSTOMER'"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 responsive-wrap">
+        <div class="follow">
+          <div class="follow-img" style="text-align: center">
+            <br />
+            <br />
+            <img
+              src="../images/follow-img.jpg"
+              class="img-fluid"
+              style="border-radius: 50%;"
+              alt="#"
+            />
+            <br />
+            <br />
+            <h6>{{ user.username | uppercase }}</h6>
+            <span>{{ user.address.city | uppercase }}</span>
+          </div>
+          <br />
+
+          <ul class="social-counts" ng-if="!followedByLoading">
+            <li>
+              <h6>{{ reviews.length }}</h6>
+              <span>Reviews</span>
+            </li>
+            <li>
+              <h6>{{ followedBy.length }}</h6>
+              <span>Followers</span>
+            </li>
+            <li>
+              <h6>{{ follows.length }}</h6>
+              <span>Followed</span>
+            </li>
+            <li ng-if="userNotInLoggedInFollows">
+              <button class="btn btn-primary" ng-click="followUser(user)">
+                Follow
+              </button>
+            </li>
+            <li ng-if="!userNotInLoggedInFollows">
+              <button class="btn btn-danger" ng-click="unfollowUser(user)">
+                Unfollow
+              </button>
+            </li>
+          </ul>
+          <div class="spinner" ng-if="followedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 responsive-wrap">
+        <div class="main-block light-bg">
+          <h5>Reviews</h5>
+          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">
+            <hr />
+            <div class="customer-content">
+              <div class="customer-review">
+                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>
+                <!--
+                  <span></span> <span></span> <span></span> <span></span>
+                  <span class="round-icon-blank"></span>
+                -->
+                <p>Reviewed on {{ review.time_created | date: "short" }}</p>
+              </div>
+              <div class="customer-rating">{{ review.rating }}</div>
+            </div>
+            <br />
+            <p class="customer-text">{{ review.text }}</p>
+            <br />
+             &nbsp; &nbsp;
+            &nbsp; &nbsp;
+            <!--
+              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;
+              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>
+            -->
+          </div>
+          <div class="spinner" ng-if="reviewsLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Follows</h5>
+          <div ng-repeat="follow in follows" ng-if="!followsLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ follow.user.username }}</div>
+              <div class="col-md-4">{{ follow.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(follow.user)"
+                >
+                  View Profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="followsLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Followed By</h5>
+          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ followed.user.username }}</div>
+              <div class="col-md-4">{{ followed.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(followed.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="followedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Favourites</h5>
+          <div ng-repeat="favourite in favourites" ng-if="!favouritesLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ favourite[0].name }}</div>
+              <div class="col-md-4">{{ favourite[0].location.city }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-primary"
+                  ng-click="viewRestaurant(favourite[0])"
+                >
+                  view Restaurant
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="favouritesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- REGISTERED USER is viewing Another CRITIC USER PROFILE -->
+<!-- This section have READ for Endorses, Follows, FollowedBy and Reviews -->
+<!-- and should user to follow CRITIC -->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'CRITIC' && loggedUserType == 'REGISTERED'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.critic.company.name }}</span>-->
+<!--            <span>{{ user.critic.company.position }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li ng-if="userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                Follow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--            <li ng-if="!userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                Unfollow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--             &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+<!--            &lt;!&ndash;-->
+<!--              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- REGISTERED USER is viewing Another OWNER USER PROFILE -->
+<!--
+  This section have READ for Endorses, Follows, EndorsedBy and Restaurant details
+-->
+<!-- and RU cannot follow,endorse OWNER -->
+<!-- can view owned Restaurant (have fetched in reviews use same method) -->
+<section
+  class="light-bg booking-details_wrap"
+  ng-if="loggedUser._id != user._id && userType == 'OWNER' && loggedUserType == 'CUSTOMER'"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 responsive-wrap">
+        <div class="follow">
+          <div class="follow-img" style="text-align: center">
+            <br />
+            <br />
+            <img
+              src="../images/follow-img.jpg"
+              class="img-fluid"
+              style="border-radius: 50%;"
+              alt="#"
+            />
+            <br />
+            <br />
+            <h6>{{ user.username | uppercase }}</h6>
+            <span>{{ user.address.city | uppercase }}</span>
+            <span>{{ user.userType }}</span>
+          </div>
+          <br />
+
+          <ul class="social-counts" ng-if="!endorsedByLoading">
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Follows</span>-->
+<!--            </li>-->
+            <li>
+              <h6>{{ endorsedBy.length }}</h6>
+              <span>Endorsed By</span>
+            </li>
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+          </ul>
+          <div class="spinner" ng-if="endorsedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 responsive-wrap">
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+        <div class="main-block light-bg">
+          <h5>Endorses</h5>
+          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ endorse.user.username }}</div>
+              <div class="col-md-4">{{ endorse.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(endorse.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="endorsesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Endorsed By</h5>
+          <div ng-repeat="endorse in endorsedBy" ng-if="!endorsedByLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ endorse.user.username }}</div>
+              <div class="col-md-4">{{ endorse.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(endorse.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="endorsedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+            <h5>Restaurant</h5>
+            <hr />
+            <div class="row" ng-if="ownerRestaurant != null">
+              <div class="col-md-4">{{ ownerRestaurant.name }}</div>
+              <div class="col-md-4">{{ ownerRestaurant.location.city }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-primary"
+                  ng-click="viewRestaurant(ownerRestaurant)"
+                >
+                  view Restaurant
+                </button>
+              </div>  
+            </div>
+            <hr />
+        </div>
+        <div class="main-block light-bg">
+            <h5>Events</h5>
+            <div ng-repeat="event in events" ng-if="!eventsLoading">
+              <hr />
+              <div class="customer-content">
+                <div class="customer-review">
+                  <h5 style="padding: 5px;">{{ event.name }}</h6>
+                  <h6 style="padding: 5px;">{{ event.restaurant.name }}</h5>
+                  <!--
+                    <span></span> <span></span> <span></span> <span></span>
+                    <span class="round-icon-blank"></span>
+                  -->
+                  <p>{{ event.start_time}}-{{ event.end_time }}</p>
+                </div>
+                <div class="customer-rating">  {{ event.price }}$</div>
+              </div>
+              <br />
+              <p class="customer-text">{{ event.description }}</p>
+              <br />
+            </div>
+            <div class="spinner" ng-if="eventsLoading">
+              <div class="double-bounce1"></div>
+              <div class="double-bounce2"></div>
+            </div>
+            <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- ANY USER is viewing Another ADVERTISER USER PROFILE -->
+<!-- Every user will this view for advertisements -->
+<!-- Just view his advertisements -->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'ADVERTISER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.userType }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!advertisementsLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ advertisements.length }}</h6>-->
+<!--              <span>Advertisements</span>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="advertisementsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--          <div class="main-block light-bg">-->
+<!--              <h5>Advertisement</h5>-->
+<!--              <div-->
+<!--                ng-repeat="advertisement in advertisements"-->
+<!--                ng-if="!advertisementLoading"-->
+<!--              >-->
+<!--                <hr />-->
+<!--                <div class="row">-->
+<!--      -->
+<!--                  -->
+<!--                    <div class="col-md-6">{{ advertisement.text}}</div>-->
+<!--                    <div class="col-md-6">{{ advertisement.posted_on }}</div>-->
+<!--                    &lt;!&ndash; <div class="col-md-4">-->
+<!--                      <button-->
+<!--                        class="btn btn-danger"-->
+<!--                        ng-click="deleteAdvertisement(advertisement, $index)"-->
+<!--                      >-->
+<!--                        Delete Advertisement-->
+<!--                      </button>-->
+<!--                    </div> &ndash;&gt;-->
+<!--                 -->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="spinner" ng-if="advertisementLoading">-->
+<!--                <div class="double-bounce1"></div>-->
+<!--                <div class="double-bounce2"></div>-->
+<!--              </div>-->
+<!--              <hr />-->
+<!--            </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; CRITIC is viewing his PROFILE &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id == user._id && userType == 'CRITIC'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.critic.company.name }}</span>-->
+<!--            <span>{{ user.critic.company.position }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <button class="btn btn-primary" ng-click="updateUser()">Update Info</button>-->
+<!--            </li>-->
+<!--            &lt;!&ndash;-->
+<!--              <li ng-if="userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                  Follow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--              <li ng-if="!userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--            &ndash;&gt;-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--          -->
+<!--            &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+
+<!--            <a ng-click="updateReview(review,$index)"-->
+<!--              ><span class="icon-pencil"></span-->
+<!--            ></a>-->
+<!--            &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--            <a ng-click="deleteReview(review)"-->
+<!--              ><span class="icon-trash"></span-->
+<!--            ></a>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="unfollowUser(follow.user,follow)"-->
+<!--                >-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash; Create unendorseOwner &ndash;&gt;-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="unEndorseOwner(endorse.user, $index)"-->
+<!--                >-->
+<!--                  Unendorse-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- CRITIC is viewing Another Critic PROFILE -->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'CRITIC' && loggedUserType == 'CRITIC'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.critic.company.name }}</span>-->
+<!--            <span>{{ user.critic.company.position }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li ng-if="userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                Follow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--            <li ng-if="!userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                Unfollow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--            &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+
+<!--            &lt;!&ndash;-->
+<!--              <a ng-click="updateReview(review,$index)"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash;-->
+<!--                  <button-->
+<!--                    class="btn btn-danger"-->
+<!--                    ng-click="unfollowUser(follow.user,follow)"-->
+<!--                  >-->
+<!--                    Unfollow-->
+<!--                  </button>-->
+<!--                &ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash; Create unendorseOwner &ndash;&gt;-->
+<!--                &lt;!&ndash;-->
+<!--                  <button-->
+<!--                    class="btn btn-danger"-->
+<!--                    ng-click="unendorseOwner(endorse.user,endorse, $index)"-->
+<!--                  >-->
+<!--                    UnEndorse-->
+<!--                  </button>-->
+<!--                &ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; CRITIC is viewing REGISTERED USER PROFILE &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'REGISTERED' && loggedUserType == 'CRITIC'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            &lt;!&ndash;-->
+<!--              <li ng-if="userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                  Follow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--              <li ng-if="!userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--            &ndash;&gt;-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--            &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+<!--            &lt;!&ndash;-->
+<!--              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Favourites</h5>-->
+<!--          <div ng-repeat="favourite in favourites" ng-if="!favouritesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ favourite[0].name }}</div>-->
+<!--              <div class="col-md-4">{{ favourite[0].location.city }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-primary"-->
+<!--                  ng-click="viewRestaurant(favourite[0])"-->
+<!--                >-->
+<!--                  view Restaurant-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="favouritesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; CRITIC is viewing OWNER PROFILE &ndash;&gt;-->
+<!--&lt;!&ndash; GIVE OPTION TO ENDORSE IF NOT ALREADY ENDORSED &ndash;&gt;-->
+
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'OWNER' && loggedUserType == 'CRITIC'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.userType }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!loggedEndorsesLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Follows</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorsedBy.length }}</h6>-->
+<!--              <span>Endorsed By</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li ng-if="userNotInLoggedInEndorses">-->
+<!--              <button class="btn btn-primary" ng-click="endorseUser(user)">-->
+<!--                Endorse-->
+<!--              </button>-->
+<!--            </li>-->
+<!--            <li ng-if="!userNotInLoggedInEndorses">-->
+<!--              <button class="btn btn-danger" ng-click="unEndorseOwner(user)">-->
+<!--                UnEndorse-->
+<!--              </button>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="loggedEndorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorsed By</h5>-->
+<!--          <div ng-repeat="endorse in endorsedBy" ng-if="!endorsedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--            <h5>Restaurant</h5>-->
+<!--            <hr />-->
+<!--            <div class="row" ng-if="ownerRestaurant != null">-->
+<!--              <div class="col-md-4">{{ ownerRestaurant.name }}</div>-->
+<!--              <div class="col-md-4">{{ ownerRestaurant.location.city }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-primary"-->
+<!--                  ng-click="viewRestaurant(ownerRestaurant)"-->
+<!--                >-->
+<!--                  view Restaurant-->
+<!--                </button>-->
+<!--              </div>  -->
+<!--            </div>-->
+<!--            <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--            <h5>Events</h5>-->
+<!--            <div ng-repeat="event in events" ng-if="!eventsLoading">-->
+<!--              <hr />-->
+<!--              <div class="customer-content">-->
+<!--                <div class="customer-review">-->
+<!--                  <h5 style="padding: 5px;">{{ event.name }}</h6>-->
+<!--                  <h6 style="padding: 5px;">{{ event.restaurant.name }}</h5>-->
+<!--                  &lt;!&ndash;-->
+<!--                    <span></span> <span></span> <span></span> <span></span>-->
+<!--                    <span class="round-icon-blank"></span>-->
+<!--                  &ndash;&gt;-->
+<!--                  <p>{{ event.start_time}}-{{ event.end_time }}</p>-->
+<!--                </div>-->
+<!--                <div class="customer-rating">  {{ event.price }}$</div>-->
+<!--              </div>-->
+<!--              <br />-->
+<!--              <p class="customer-text">{{ event.description }}</p>-->
+<!--              <br />-->
+<!--            </div>-->
+<!--            <div class="spinner" ng-if="eventsLoading">-->
+<!--              <div class="double-bounce1"></div>-->
+<!--              <div class="double-bounce2"></div>-->
+<!--            </div>-->
+<!--            <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- Owner is viewing his PROFILE -->
+
+<section
+  class="light-bg booking-details_wrap"
+  ng-if="loggedUser._id == user._id && userType == 'OWNER'"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 responsive-wrap">
+        <div class="follow">
+          <div class="follow-img" style="text-align: center">
+            <br />
+            <br />
+            <img
+              src="../images/follow-img.jpg"
+              class="img-fluid"
+              style="border-radius: 50%;"
+              alt="#"
+            />
+            <br />
+            <br />
+            <h6>{{ user.username | uppercase }}</h6>
+            <span>{{ user.address.city | uppercase }}</span>
+            <!-- <span>{{ user.critic.company.name }}</span>
+            <span>{{ user.critic.company.position }}</span> -->
+          </div>
+          <br />
+
+<!--          <ul class="social-counts" ng-if="!followsLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorsedBy.length }}</h6>-->
+<!--              <span>Endorsed By</span>-->
+<!--            </li>-->
+<!--            -->
+<!--              <li>-->
+<!--                <button class="btn btn-primary" ng-click="createEvent()">-->
+<!--                  Create Event-->
+<!--                </button>-->
+<!--              </li>-->
+
+<!--              <li>-->
+<!--                  <button class="btn btn-primary" ng-click="updateUser()">Update Info</button>-->
+<!--                </li>-->
+<!--             -->
+<!--           -->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+        </div>
+      </div>
+      <div class="col-md-8 responsive-wrap">
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="unfollowUser(follow.user,follow)"-->
+<!--                >-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash; Create unendorseOwner &ndash;&gt;-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="unEndorseOwner(endorse.user, $index)"-->
+<!--                >-->
+<!--                  Unendorse-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+        <div class="main-block light-bg">
+          <h5>Endorsed By</h5>
+          <div ng-repeat="endorse in endorsedBy" ng-if="!endorsedByLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ endorse.user.username }}</div>
+              <div class="col-md-4">{{ endorse.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(endorse.user)"
+                >
+                  view profile
+                </button>
+                <!-- Create unendorseOwner -->
+                <!--
+                  <button
+                    class="btn btn-danger"
+                    ng-click="unEndorseOwner(endorse.user, $index)"
+                  >
+                    Unendorse
+                  </button>
+                -->
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="endorsesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+          <a href="#!/create-restaurant"><button class="btn btn-primary" > Create Restaurant</button></a>
+        </div>
+        <div class="main-block light-bg">
+          <h5>Restaurant</h5>
+          <hr />
+          <div class="row" ng-if="ownerRestaurant != null">
+            <div class="col-md-3">{{ ownerRestaurant.name }}</div>
+            <div class="col-md-3">{{ ownerRestaurant.location.city }}</div>
+            <div class="col-md-3">
+              <button
+                class="btn btn-primary"
+                ng-click="viewRestaurant(ownerRestaurant)"
+              >
+                view Restaurant
+              </button>
+            </div>
+            <div class="col-md-3">
+                <button
+                  class="btn btn-danger"
+                  ng-click="unClaimRestaurant()"
+                >
+                 Un Claim
+                </button>
+              </div>
+            
+          </div>
+          <hr />
+        </div>
+<!--        <div class="main-block light-bg">-->
+<!--            <h5>Events</h5>-->
+<!--            <div ng-repeat="event in events" ng-if="!eventsLoading">-->
+<!--              <hr />-->
+<!--              <div class="customer-content">-->
+<!--                <div class="customer-review">-->
+<!--                  <h5 style="padding: 5px;">{{ event.name }}-->
+<!--                  <h6 style="padding: 5px;">{{ event.restaurant.name }}</h6>-->
+<!--                  </h5>-->
+<!--                  &lt;!&ndash;-->
+<!--                    <span></span> <span></span> <span></span> <span></span>-->
+<!--                    <span class="round-icon-blank"></span>-->
+<!--                  &ndash;&gt;-->
+<!--                  <p>{{ event.start_time}}-{{ event.end_time }}</p>-->
+<!--                </div>-->
+<!--                <div class="customer-rating">{{ event.price }}$</div>-->
+<!--              </div>-->
+<!--              <br />-->
+<!--              <p class="customer-text">{{ event.description }}</p>-->
+<!--              <br />-->
+<!--              <a ng-click="updateEvent(event,$index)"-->
+<!--              ><span class="icon-pencil"></span-->
+<!--            ></a>-->
+<!--            &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--            <a ng-click="deleteEvent(event, $index)"-->
+<!--              ><span class="icon-trash"></span-->
+<!--            ></a>-->
+<!--          </div>-->
+<!--          <hr />-->
+
+<!--            <div class="spinner" ng-if="eventsLoading">-->
+<!--              <div class="double-bounce1"></div>-->
+<!--              <div class="double-bounce2"></div>-->
+<!--            </div>-->
+            <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- Owner is viewing another owner PROFILE -->
+<!-- GIVE OPTION TO ENDORSE IF NOT ALREADY ENDORSED -->
+
+<section
+  class="light-bg booking-details_wrap"
+  ng-if="loggedUser._id != user._id && userType == 'OWNER' && loggedUserType == 'OWNER'"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 responsive-wrap">
+        <div class="follow">
+          <div class="follow-img" style="text-align: center">
+            <br />
+            <br />
+            <img
+              src="../images/follow-img.jpg"
+              class="img-fluid"
+              style="border-radius: 50%;"
+              alt="#"
+            />
+            <br />
+            <br />
+            <h6>{{ user.username | uppercase }}</h6>
+            <span>{{ user.address.city | uppercase }}</span>
+            <span>{{ user.userType }}</span>
+          </div>
+          <br />
+
+          <ul class="social-counts" ng-if="!loggedEndorsesLoading">
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Follows</span>-->
+<!--            </li>-->
+            <li>
+              <h6>{{ endorsedBy.length }}</h6>
+              <span>Endorsed By</span>
+            </li>
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+            <li ng-if="userNotInLoggedInEndorses">
+              <button class="btn btn-primary" ng-click="endorseUser(user)">
+                Endorse
+              </button>
+            </li>
+            <li ng-if="!userNotInLoggedInEndorses">
+              <button class="btn btn-danger" ng-click="unEndorseOwner(user)">
+                UnEndorse
+              </button>
+            </li>
+          </ul>
+          <div class="spinner" ng-if="loggedEndorsesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 responsive-wrap">
+        <div class="main-block light-bg">
+          <h5>Follows</h5>
+          <div ng-repeat="follow in follows" ng-if="!followsLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ follow.user.username }}</div>
+              <div class="col-md-4">{{ follow.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(follow.user)"
+                >
+                  View Profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="followsLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Endorses</h5>
+          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ endorse.user.username }}</div>
+              <div class="col-md-4">{{ endorse.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(endorse.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="endorsesLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+          <h5>Endorsed By</h5>
+          <div ng-repeat="endorse in endorsedBy" ng-if="!endorsedByLoading">
+            <hr />
+            <div class="row">
+              <div class="col-md-4">{{ endorse.user.username }}</div>
+              <div class="col-md-4">{{ endorse.user.userType }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-danger"
+                  ng-click="viewProfile(endorse.user)"
+                >
+                  view profile
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="spinner" ng-if="endorsedByLoading">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+          </div>
+          <hr />
+        </div>
+        <div class="main-block light-bg">
+            <h5>Restaurant</h5>
+            <hr />
+            <div class="row" ng-if="ownerRestaurant != null">
+              <div class="col-md-4">{{ ownerRestaurant.name }}</div>
+              <div class="col-md-4">{{ ownerRestaurant.location.city }}</div>
+              <div class="col-md-4">
+                <button
+                  class="btn btn-primary"
+                  ng-click="viewRestaurant(ownerRestaurant)"
+                >
+                  view Restaurant
+                </button>
+              </div>  
+            </div>
+            <hr />
+        </div>
+        <div class="main-block light-bg">
+            <h5>Events</h5>
+            <div ng-repeat="event in events" ng-if="!eventsLoading">
+              <hr />
+              <div class="customer-content">
+                <div class="customer-review">
+                  <h5 style="padding: 5px;">{{ event.name }}</h6>
+                  <h6 style="padding: 5px;">{{ event.restaurant.name }}</h5>
+                  <!--
+                    <span></span> <span></span> <span></span> <span></span>
+                    <span class="round-icon-blank"></span>
+                  -->
+                  <p>{{ event.start_time}}-{{ event.end_time }}</p>
+                </div>
+                <div class="customer-rating">  {{ event.price }}$</div>
+              </div>
+              <br />
+              <p class="customer-text">{{ event.description }}</p>
+              <br />
+            </div>
+            <div class="spinner" ng-if="eventsLoading">
+              <div class="double-bounce1"></div>
+              <div class="double-bounce2"></div>
+            </div>
+            <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ============================= Section Break =============================
+-->
+
+<!-- Owner is viewing another critic PROFILE -->
+<!-- GIVE OPTION TO Follow IF NOT ALREADY Followed -->
+
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'CRITIC' && loggedUserType == 'OWNER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.critic.company.name }}</span>-->
+<!--            <span>{{ user.critic.company.position }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--            <li ng-if="userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                Follow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--            <li ng-if="!userNotInLoggedInFollows">-->
+<!--              <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                Unfollow-->
+<!--              </button>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--            &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+
+<!--            &lt;!&ndash;-->
+<!--              <a ng-click="updateReview(review,$index)"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash;-->
+<!--                  <button-->
+<!--                    class="btn btn-danger"-->
+<!--                    ng-click="unfollowUser(follow.user,follow)"-->
+<!--                  >-->
+<!--                    Unfollow-->
+<!--                  </button>-->
+<!--                &ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--                &lt;!&ndash; Create unendorseOwner &ndash;&gt;-->
+<!--                &lt;!&ndash;-->
+<!--                  <button-->
+<!--                    class="btn btn-danger"-->
+<!--                    ng-click="unendorseOwner(endorse.user,endorse, $index)"-->
+<!--                  >-->
+<!--                    UnEndorse-->
+<!--                  </button>-->
+<!--                &ndash;&gt;-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; Owner is viewing another RU PROFILE &ndash;&gt;-->
+<!--&lt;!&ndash; Only Read &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'REGISTERED' && loggedUserType == 'OWNER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            &lt;!&ndash;-->
+<!--              <li ng-if="userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                  Follow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--              <li ng-if="!userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--            &ndash;&gt;-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--           &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+<!--            &lt;!&ndash;-->
+<!--              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Favourites</h5>-->
+<!--          <div ng-repeat="favourite in favourites" ng-if="!favouritesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ favourite[0].name }}</div>-->
+<!--              <div class="col-md-4">{{ favourite[0].location.city }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-primary"-->
+<!--                  ng-click="viewRestaurant(favourite[0])"-->
+<!--                >-->
+<!--                  view Restaurant-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="favouritesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; Advertiser is viewing his profile &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id == user._id && userType == 'ADVERTISER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.userType }}</span>-->
+<!--            <ul>-->
+<!--                <li>-->
+<!--                    <button class="btn btn-primary" ng-click="updateUser()">Update Info</button>-->
+<!--                  </li>-->
+<!--            </ul>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!advertisementsLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ advertisements.length }}</h6>-->
+<!--              <span>Advertisements</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <button class="btn btn-primary" ng-click="createAdvertisement()">-->
+<!--                Create Ad-->
+<!--              </button>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="advertisementsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Advertisement</h5>-->
+<!--          <div-->
+<!--            ng-repeat="advertisement in advertisements"-->
+<!--            ng-if="!advertisementLoading"-->
+<!--          >-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--  -->
+<!--              -->
+<!--                <div class="col-md-4">{{ advertisement.text}}</div>-->
+<!--                <div class="col-md-4">{{ advertisement.posted_on }}</div>-->
+<!--                <div class="col-md-4">-->
+<!--                  <button-->
+<!--                    class="btn btn-danger"-->
+<!--                    ng-click="deleteAdvertisement(advertisement, $index)"-->
+<!--                  >-->
+<!--                    Delete Advertisement-->
+<!--                  </button>-->
+<!--                  <button-->
+<!--                    class="btn btn-warning"-->
+<!--                    ng-click="updateAdvertisement(advertisement, $index)"-->
+<!--                  >-->
+<!--                    Update Advertisement-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--             -->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="advertisementLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+<!--&lt;!&ndash; Advertiser critic &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'CRITIC' && loggedUserType == 'ADVERTISER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.critic.company.name }}</span>-->
+<!--            <span>{{ user.critic.company.position }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--           &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+<!--            &lt;!&ndash;-->
+<!--              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+<!--&lt;!&ndash; Advertiser owner &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'OWNER' && loggedUserType == 'ADVERTISER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--            <span>{{ user.userType }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!endorsedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Follows</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorsedBy.length }}</h6>-->
+<!--              <span>Endorsed By</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ endorses.length }}</h6>-->
+<!--              <span>Endorses</span>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="endorsedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorses</h5>-->
+<!--          <div ng-repeat="endorse in endorses" ng-if="!endorsesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Endorsed By</h5>-->
+<!--          <div ng-repeat="endorse in endorsedBy" ng-if="!endorsedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ endorse.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ endorse.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(endorse.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="endorsedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--            <h5>Restaurant</h5>-->
+<!--            <hr />-->
+<!--            <div class="row" ng-if="ownerRestaurant != null">-->
+<!--              <div class="col-md-4">{{ ownerRestaurant.name }}</div>-->
+<!--              <div class="col-md-4">{{ ownerRestaurant.location.city }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-primary"-->
+<!--                  ng-click="viewRestaurant(ownerRestaurant)"-->
+<!--                >-->
+<!--                  view Restaurant-->
+<!--                </button>-->
+<!--              </div>  -->
+<!--            </div>-->
+<!--            <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--            <h5>Events</h5>-->
+<!--            <div ng-repeat="event in events" ng-if="!eventsLoading">-->
+<!--              <hr />-->
+<!--              <div class="customer-content">-->
+<!--                <div class="customer-review">-->
+<!--                  <h5 style="padding: 5px;">{{ event.name }}</h6>-->
+<!--                  <h6 style="padding: 5px;">{{ event.restaurant.name }}</h5>-->
+<!--                  &lt;!&ndash;-->
+<!--                    <span></span> <span></span> <span></span> <span></span>-->
+<!--                    <span class="round-icon-blank"></span>-->
+<!--                  &ndash;&gt;-->
+<!--                  <p>{{ event.start_time}}-{{ event.end_time }}</p>-->
+<!--                </div>-->
+<!--                <div class="customer-rating">  {{ event.price }}$</div>-->
+<!--              </div>-->
+<!--              <br />-->
+<!--              <p class="customer-text">{{ event.description }}</p>-->
+<!--              <br />-->
+<!--            </div>-->
+<!--            <div class="spinner" ng-if="eventsLoading">-->
+<!--              <div class="double-bounce1"></div>-->
+<!--              <div class="double-bounce2"></div>-->
+<!--            </div>-->
+<!--            <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash;-->
+<!--  ============================= Section Break =============================-->
+<!--&ndash;&gt;-->
+
+<!--&lt;!&ndash; Advertiser is viewing another RU PROFILE &ndash;&gt;-->
+<!--&lt;!&ndash; Only Read &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser._id != user._id && userType == 'REGISTERED' && loggedUserType == 'ADVERTISER'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-4 responsive-wrap">-->
+<!--        <div class="follow">-->
+<!--          <div class="follow-img" style="text-align: center">-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <img-->
+<!--              src="../images/follow-img.jpg"-->
+<!--              class="img-fluid"-->
+<!--              style="border-radius: 50%;"-->
+<!--              alt="#"-->
+<!--            />-->
+<!--            <br />-->
+<!--            <br />-->
+<!--            <h6>{{ user.username | uppercase }}</h6>-->
+<!--            <span>{{ user.address.city | uppercase }}</span>-->
+<!--          </div>-->
+<!--          <br />-->
+
+<!--          <ul class="social-counts" ng-if="!followedByLoading">-->
+<!--            <li>-->
+<!--              <h6>{{ reviews.length }}</h6>-->
+<!--              <span>Reviews</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ followedBy.length }}</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>{{ follows.length }}</h6>-->
+<!--              <span>Followed</span>-->
+<!--            </li>-->
+<!--            &lt;!&ndash;-->
+<!--              <li ng-if="userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-primary" ng-click="followUser(user)">-->
+<!--                  Follow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--              <li ng-if="!userNotInLoggedInFollows">-->
+<!--                <button class="btn btn-danger" ng-click="unfollowUser(user)">-->
+<!--                  Unfollow-->
+<!--                </button>-->
+<!--              </li>-->
+<!--            &ndash;&gt;-->
+<!--          </ul>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-md-8 responsive-wrap">-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Reviews</h5>-->
+<!--          <div ng-repeat="review in reviews" ng-if="!reviewsLoading">-->
+<!--            <hr />-->
+<!--            <div class="customer-content">-->
+<!--              <div class="customer-review">-->
+<!--                <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>-->
+<!--                &lt;!&ndash;-->
+<!--                  <span></span> <span></span> <span></span> <span></span>-->
+<!--                  <span class="round-icon-blank"></span>-->
+<!--                &ndash;&gt;-->
+<!--                <p>Reviewed on {{ review.time_created | date: "short" }}</p>-->
+<!--              </div>-->
+<!--              <div class="customer-rating">{{ review.rating }}</div>-->
+<!--            </div>-->
+<!--            <br />-->
+<!--            <p class="customer-text">{{ review.text }}</p>-->
+<!--            <br />-->
+<!--         &nbsp; &nbsp;-->
+<!--            &nbsp; &nbsp;-->
+<!--            &lt;!&ndash;-->
+<!--              <a href="#"><span class="icon-pencil"></span></a> &nbsp; &nbsp; &nbsp; &nbsp;-->
+<!--              <a ng-click="deleteReview(review)"><span class="icon-trash"></span></a>-->
+<!--            &ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="reviewsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Follows</h5>-->
+<!--          <div ng-repeat="follow in follows" ng-if="!followsLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ follow.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ follow.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(follow.user)"-->
+<!--                >-->
+<!--                  View Profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Followed By</h5>-->
+<!--          <div ng-repeat="followed in followedBy" ng-if="!followedByLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ followed.user.username }}</div>-->
+<!--              <div class="col-md-4">{{ followed.user.userType }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-danger"-->
+<!--                  ng-click="viewProfile(followed.user)"-->
+<!--                >-->
+<!--                  view profile-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="followedByLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--        <div class="main-block light-bg">-->
+<!--          <h5>Favourites</h5>-->
+<!--          <div ng-repeat="favourite in favourites" ng-if="!favouritesLoading">-->
+<!--            <hr />-->
+<!--            <div class="row">-->
+<!--              <div class="col-md-4">{{ favourite[0].name }}</div>-->
+<!--              <div class="col-md-4">{{ favourite[0].location.city }}</div>-->
+<!--              <div class="col-md-4">-->
+<!--                <button-->
+<!--                  class="btn btn-primary"-->
+<!--                  ng-click="viewRestaurant(favourite[0])"-->
+<!--                >-->
+<!--                  view Restaurant-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="spinner" ng-if="favouritesLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--          </div>-->
+<!--          <hr />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+
+<!--&lt;!&ndash; Anony user view &ndash;&gt;-->
+<!--<section-->
+<!--  class="light-bg booking-details_wrap"-->
+<!--  ng-if="loggedUser == null || loggedUser.userType == 'ADMIN'"-->
+<!--&gt;-->
+<!--  <div class="container">-->
+<!--    Login to view profile, If you are admin, visit admin panel to manage users-->
+<!--  </div>-->
+</section>

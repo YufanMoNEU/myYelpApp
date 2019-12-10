@@ -1,0 +1,257 @@
+<!-- ============================= BOOKING ============================= -->
+
+<!--
+  <div class="container-fluid">
+      <img src={{restaurant.image_url}} style="width: 100%; height: 600px;" alt="#">
+  </div>
+-->
+<!-- //END BOOKING -->
+
+<!--
+  ============================= BOOKING DETAILS =============================
+-->
+<section class="light-bg booking-details_wrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 responsive-wrap">
+        <div class="booking-checkbox_wrap">
+          <div class="row">
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description">Bike Parking</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description"
+                  >Wireless Internet
+                </span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description">Smoking Allowed </span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description">Street Parking</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description">Special</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label class="custom-checkbox">
+                <span class="ti-check-box"></span>
+                <span class="custom-control-description"
+                  >Accepts Credit cards</span
+                >
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- Critic review Section -->
+        <!-- <div class="booking-checkbox_wrap mt-4">
+            <h5>Critic Reviews</h5>
+            <div ng-repeat="review in reviews">
+              <hr>
+              <div class="customer-review_wrap">
+                <div class="customer-img">
+                  <img
+                    src="../images/customer-img1.jpg"
+                    class="img-fluid"
+                    alt="#"
+                  />
+                  <p>{{review.user.username}}</p>
+                  <span>00 Reviews</span>
+                </div>
+                <div class="customer-content-wrap">
+                  <div class="customer-content">
+                    <div class="customer-review">
+                      <h6>Best noodles in the Newyork city</h6>
+                      <span></span> <span></span> <span></span> <span></span>
+                      <span class="round-icon-blank"></span>
+                      <p>Reviewed on {{review.date | date: 'medium'}}</p>
+                    </div>
+                    <div class="customer-rating">{{review.rating}}</div>
+                  </div>
+                  <p class="customer-text">
+                  {{review.text}}
+                  </p>
+                  <ul>
+                    <li>
+                      <img
+                        src="../images/review-img1.jpg"
+                        class="img-fluid"
+                        alt="#"
+                      />
+                    </li>
+                    <li>
+                      <img
+                        src="../images/review-img2.jpg"
+                        class="img-fluid"
+                        alt="#"
+                      />
+                    </li>
+                    <li>
+                      <img
+                        src="../images/review-img3.jpg"
+                        class="img-fluid"
+                        alt="#"
+                      />
+                    </li>
+                  </ul>
+                  <span>28 people marked this review as helpful</span>
+                  <a href="#"><span class="icon-like"></span>Helpful</a>
+                </div>
+              </div>
+            </div>
+        </div> -->
+        <div class="booking-checkbox_wrap mt-4">
+          <h5>Customer Reviews</h5>
+          <div ng-repeat="review in reviews">
+            <hr>
+            <div class="customer-review_wrap">
+              <div class="customer-img">
+                <img
+                  src="../images/customer-img1.jpg"
+                  class="img-fluid"
+                  alt="#"
+                />
+                <p>{{review.user.username}}</p>
+                <p>{{review.user.userType}}</p>
+              </div>
+              <div class="customer-content-wrap">
+                  <div class="customer-content">
+                      <div class="customer-review">
+                        <h6 style="padding: 5px;">{{ review.restaurant.name }}</h6>
+                        <!--
+                          <span></span> <span></span> <span></span> <span></span>
+                          <span class="round-icon-blank"></span>
+                        -->
+                        <p>Reviewed on {{ review.time_created | date: 'short' }}</p>
+                      </div>
+                      <div class="customer-rating">{{ review.rating }}</div>
+                    </div>
+                <p class="customer-text">
+                {{review.text}}
+                </p>
+                <!-- <ul>
+                  <li>
+                    <img
+                      src="../images/review-img1.jpg"
+                      class="img-fluid"
+                      alt="#"
+                    />
+                  </li>
+                  <li>
+                    <img
+                      src="../images/review-img2.jpg"
+                      class="img-fluid"
+                      alt="#"
+                    />
+                  </li>
+                  <li>
+                    <img
+                      src="../images/review-img3.jpg"
+                      class="img-fluid"
+                      alt="#"
+                    />
+                  </li>
+                </ul> -->
+                
+                <a href="#"><span class="icon-like"></span>Helpful</a>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+      <div class="col-md-4 responsive-wrap">
+        <div class="contact-info">
+          <img src="{{restaurant.image_url}}" class="img-fluid" alt="#" />
+          <div class="featured-title-box">
+              <h6>{{restaurant.name}}</h6>
+           </div>
+          <div class="address">
+            <span class="icon-location-pin"></span>
+            <p>
+                {{ restaurant.location.address1 }},
+                {{ restaurant.location.city }},
+                {{ restaurant.location.zip_code }}
+              </p>
+          </div>
+          <div class="address">
+            <span class="icon-screen-smartphone"></span>
+            <p>{{ restaurant.phone }}</p>
+          </div>
+          <div class="address">
+            <span class="icon-link"></span>
+            <p>https://burgerandlobster.com</p>
+          </div>
+          <div class="address">
+            <span class="icon-clock"></span>
+            <p>
+              Mon - Sun 09:30 am - 05:30 pm <br />
+              <span class="open-now">OPEN NOW</span>
+            </p>
+          </div>
+          <div ng-if="!loadingOwner">
+              <a class="btn btn-outline-primary btn-contact"
+              ng-if="userType == 'CUSTOMER' && !alreadyFavourite" ng-click="favouriteRestaurant()">Favorite</a
+            >
+            <a class="btn btn-outline-danger btn-contact"
+              ng-if="userType == 'CUSTOMER' && alreadyFavourite" ng-click="unFavouriteRestaurant()">Unlike</a
+            >
+<!--            <a class="btn btn-outline-primary btn-contact"-->
+<!--              ng-if="userType == 'CUSTOMER' || userType == 'CRITIC'" ng-click="createReview()">Create Review</a-->
+<!--            >-->
+            <a class="btn btn-outline-primary btn-contact"
+            ng-if="userType == 'OWNER' && !restaurant.is_claimed" ng-click="claimRestaurant()">Claim Restaurant</a
+            > 
+            <div ng-if="restaurant.is_claimed">
+                <a class="btn btn-outline-primary btn-contact"
+                 disabled="true">Claimed</a
+                > 
+            </div>
+          </div>
+         
+        </div>
+<!--        <div class="follow">-->
+<!--          <div class="follow-img">-->
+<!--            <img src="../images/follow-img.jpg" class="img-fluid" alt="#" />-->
+<!--            <h6>Owner</h6>-->
+<!--            <span>New York</span>-->
+<!--          </div>-->
+<!--          <ul class="social-counts">-->
+<!--            <li>-->
+<!--              <h6>26</h6>-->
+<!--              <span>Listings</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>326</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--              <h6>12</h6>-->
+<!--              <span>Followers</span>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--          <a href="#">FOLLOW</a>-->
+<!--        </div>-->
+      </div>
+    </div>
+  </div>
+</section>
+<head>
+  <script src="../js/temp.js"></script>
+</head>
+<!-- //END BOOKING DETAILS -->

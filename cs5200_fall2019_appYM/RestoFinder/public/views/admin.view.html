@@ -1,0 +1,76 @@
+<section class="booking-details_wrap container">
+    <div ng-show="userType == 'ADMIN'">
+        <h5>
+            Users and Favorites
+        </h5>
+        <hr>
+        <button class="btn btn-outline-primary" ng-click="showHideUsers()">View Users</button>
+        <br/><br/>
+        <div ng-show="isVisibleUsers">
+            <a class="btn btn-success" href="/#!/register">Create User</a>
+            <table class="table table-sm admin-table">
+                <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Favorites</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="u in users">
+                    <td>
+                        {{u.username}}
+                    </td>
+                    <td>
+                        <p>{{u.userType}}</p>
+                    </td>
+                    <td ng-show="u.userType == 'CUSTOMER'">
+                        <a href="/#!/favorites/{{u._id}}" class="btn btn-warning">Favorites</a>
+                    </td>
+                    <td ng-show="u.userType != 'CUSTOMER'">
+                        <p>         </p>
+                    </td>
+                    <td>
+                        <a href="/#!/update-user/{{u._id}}" class="btn btn-primary">Update</a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="removeUser(u._id, $index)">Remove</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div>
+            <h5>
+                Restaurants
+            </h5>
+            <hr>
+            <a class="btn btn-outline-primary" ng-click="showHideRestaurants()">View Restaurants</a>
+            <br/><br/>
+            <div ng-show="isVisibleRestaurants">
+                <a class="btn btn-success" href="/#!/create-restaurant">Create Restaurant</a>
+                <table class="table table-sm admin-table">
+                    <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="r in restaurants">
+                        <td>
+                            <a href=/#!/restaurant/{{r._id}}>{{r.name}}</a>
+                        </td>
+                        <td>
+                            <a href="/#!/update-restaurant/{{r._id}}" class="btn btn-primary">Update</a>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" ng-click="removeRestaurant(r._id, $index)">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <!--</div>-->
+</section>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Seung Son, Rishab Malik, Tejas Parab">
+    <meta name="description" content="#">
+    <meta name="keywords" content="#">
+    <!-- Page Title -->
+    <title>RestoFinder</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900" rel="stylesheet">
+    <!-- Simple line Icon -->
+    <link rel="stylesheet" href="./css/simple-line-icons.css">
+    <!-- Themify Icon -->
+    <link rel="stylesheet" href="./css/themify-icons.css">
+    <!-- Hover Effects -->
+    <link rel="stylesheet" href="./css/set1.css">
+    <link rel="stylesheet" href="./css/swiper.min.css">
+    <link rel="stylesheet" href="./js/dist/angular-flash.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.9/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.9/angular-material.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular-cookies.min.js"></script>
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/swiper.min.js"></script>
+    <script src="./js/dist/angular-flash.min.js"></script>
+
+    <!-- Adding all Controllers -->
+    <script src="./app.js"></script>
+    <script src="./config.js"></script>
+    <script src="./controllers/home.controller.js"></script>
+    <script src="./controllers/search.controller.js"></script>
+    <script src="./controllers/login.controller.js"></script>
+    <script src="./controllers/register.controller.js"></script>
+    <script src="./controllers/user.controller.js"></script>
+    <script src="./controllers/restaurant.controller.js"></script>
+    <script src="./controllers/admin.controller.js"></script>
+    <script src="./controllers/restaurants.controller.js"></script>
+    <script src="./controllers/header.controller.js"></script>
+    <script src="./controllers/create-restaurant.controller.js"></script>
+    <script src="./controllers/update-restaurant.controller.js"></script>
+    <script src="./controllers/update-user.controller.js"></script>
+    <script src="./controllers/favorites.controller.js"></script>
+    <script src="./controllers/create-favorite.controller.js"></script>
+    <script src="./controllers/update-favorite.controller.js"></script>
+
+    <!-- Add services-->
+    <script src="./services/search.service.js"></script>
+    <script src="./services/restaurant.service.js"></script>
+    <script src="./services/review.service.js"></script>
+    <script src="./services/login.service.js"></script>
+    <script src="./services/flash.service.js"></script>
+    <script src="./services/user.service.js"></script>
+    <script src="./services/advertisement.service.js"></script>
+    <script src="./services/event.service.js"></script>
+</head>
+
+<body ng-app="RestoFinder">
+<flash-message></flash-message>
+<!--============================= HEADER =============================-->
+<div ng-controller="HeaderController">
+    <div ng-include="'./views/header.view.html'"></div>
+</div>
+
+<div ng-view></div>
+<!--============================= FOOTER =============================-->
+<footer class="main-block dark-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <p>Copyright &copy; 2018 Listing. All rights reserved | This template is made with <i
+                            class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    </p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <ul>
+                        <li><a href="#"><span class="ti-facebook"></span></a></li>
+                        <li><a href="#"><span class="ti-twitter-alt"></span></a></li>
+                        <li><a href="#"><span class="ti-instagram"></span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--//END FOOTER -->
+
+
+<!-- jQuery, Bootstrap JS. -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- Angular components -->
+
+
+<script>
+    $(window).scroll(function () {
+        // 100 = The point you would like to fade the nav in.
+
+        if ($(window).scrollTop() > 100) {
+
+            $('.fixed').addClass('is-sticky');
+
+        } else {
+
+            $('.fixed').removeClass('is-sticky');
+
+        }
+        ;
+    });
+</script>
+</body>
+
+</html>

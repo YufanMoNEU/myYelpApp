@@ -1,0 +1,118 @@
+<!-- ============================= DETAIL ============================= -->
+<section ng-if="searchType == 'restaurant'">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 responsive-wrap">
+        <div class="row detail-filter-wrap">
+          <div class="col-md-4 featured-responsive">
+            <div class="detail-filter-text">
+              <p>
+                {{ restaurants.length }} Results For <span>Restaurant</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row detail-options-wrap">
+          <div
+            class="col-sm-6 col-lg-12 col-xl-6 featured-responsive"
+            ng-repeat="restaurant in restaurants"
+          >
+            <div class="featured-place-wrap">
+              <a ng-click="viewRestaurant(restaurant)">
+                <img src={{restaurant.image_url}} class="restaurant-image" alt="#" />
+                <span class="featured-rating-orange ">{{restaurant.rating}}</span>
+                <div class="featured-title-box">
+                  <h6>{{ restaurant.name }}</h6>
+                  <p>Restaurant</p>
+                  <span>• </span>
+                  <p>{{restaurant.review_count}} Reviews</p>
+                  <span> • </span>
+                  <p><span>{{restaurant.price}}</span></p>
+                  <ul>
+                    <li>
+                      <span class="icon-location-pin"></span>
+                      <p>{{restaurant.location.address1}}, {{restaurant.location.city}}, {{restaurant.location.zip_code}}</p>
+                    </li>
+                    <li>
+                      <span class="icon-screen-smartphone"></span>
+                      <p>{{restaurant.phone}}</p>
+                    </li>
+                    <!-- <li>
+                      <span class="icon-link"></span>
+                      <p>{{restaurant.url}}</p>
+                    </li> -->
+                  </ul>
+                  <div class="bottom-icons">
+                    <div class="closed-now">CLOSED NOW</div>
+                    <span class="ti-heart"></span>
+                    <span class="ti-bookmark"></span>
+                  </div>
+                </div>
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5 responsive-wrap map-wrap">
+        <div class="map-fix">
+          <!-- data-toggle="affix" -->
+          <!--
+            Google map will appear here! Edit the Latitude, Longitude and Zoom Level below using data-attr-*
+          -->
+          <div
+            id="map"
+            data-lat="40.674"
+            data-lon="-73.945"
+            data-zoom="14"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- //END DETAIL -->
+<!-- ============================= DETAIL ============================= -->
+<section ng-if="searchType == 'user'">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 responsive-wrap">
+          <div class="row detail-filter-wrap">
+            <div class="col-md-4 featured-responsive">
+              <div class="detail-filter-text">
+                <p>
+                  {{ users.length }} Results For <span>Users</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="row detail-options-wrap">
+            <div
+              class="col-sm-3 col-lg-3 col-xl-3 featured-responsive"
+              ng-repeat="user in users"
+            >
+              <div>
+                <a ng-click="viewUser(user)">
+                    <div class="follow-img" style="text-align: center">
+                        <br>
+                        <br>
+                    <img src="../images/follow-img.jpg" style="border-radius: 50%;" alt="#" />
+                    <br>
+                    <br>
+                    <h6>{{ user.username | uppercase }}</h6>
+                    <span>{{ user.address.city | uppercase}}</span>
+                  </div>
+                
+              </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- //END DETAIL -->
+  

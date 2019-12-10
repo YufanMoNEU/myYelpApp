@@ -1,0 +1,205 @@
+<!-- SLIDER -->
+<section class="slider d-flex align-items-center">
+  <!-- <img src="images/slider.jpg" class="img-fluid" alt="#"> -->
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12">
+        <div class="slider-title_box">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="slider-content_wrap">
+                <h1>Discover great restaurants!</h1>
+                <h5 class="uncover">
+                  Let's uncover the best places to eat nearest to you.
+                </h5>
+              </div>
+            </div>
+          </div>
+          <br /><br />
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-10">
+              <h5 class="search-text">Search Restaurants</h5>
+              <form class="form-wrap mt-4">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <input
+                    type="text"
+                    placeholder="What restaurant are you looking for?"
+                    class="btn-group1"
+                    ng-model="search"
+                  />
+                  <button type="submit" class="btn-form" ng-click="getSearchResults()">
+                    <span class="icon-magnifier search-icon"></span>SEARCH<i
+                      class="pe-7s-angle-right"
+                    ></i>
+                  </button>
+                </div>
+              </form>
+              <br />
+              <br />
+              <h5 class="search-text">Search Users</h5>
+              <form class="form-wrap mt-4">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <input
+                    type="text"
+                    placeholder="Who are you looking for?"
+                    class="btn-group1",
+                    ng-model="userSearch"
+                  />
+                  <button ng-click="getUserSearchResults()" class="btn-form">
+                    <span class="icon-magnifier search-icon"></span>SEARCH<i
+                      class="pe-7s-angle-right"
+                    ></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- // SLIDER -->
+<!-- //END HEADER -->
+<!--
+  ============================= FEATURED PLACES =============================
+-->
+<section class="main-block light-bg">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="styled-heading">
+          <h3>Featured Restaurants</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 featured-responsive"  ng-repeat="restaurant in featuredRestaurants">
+        <div class="featured-place-wrap">
+          <a ng-click="viewRestaurant(restaurant)">
+            <img src={{restaurant.image_url}} class="restaurant-image" alt="#" />
+            <span class="featured-rating-orange ">{{restaurant.rating}}</span>
+            <div class="featured-title-box">
+              <h6>{{ restaurant.name }}</h6>
+              <p>Restaurant</p>
+              <span>• </span>
+              <p>{{restaurant.review_count}} Reviews</p>
+              <span> • </span>
+              <p><span>{{restaurant.price}}</span></p>
+              <ul>
+                <li>
+                  <span class="icon-location-pin"></span>
+                  <p>{{restaurant.location.address1}}, {{restaurant.location.city}}, {{restaurant.location.zip_code}}</p>
+                </li>
+                <li>
+                  <span class="icon-screen-smartphone"></span>
+                  <p>{{restaurant.phone}}</p>
+                </li>
+                <!-- <li>
+                  <span class="icon-link"></span>
+                  <p>{{restaurant.url}}</p>
+                </li> -->
+              </ul>
+              <!-- <div class="bottom-icons">
+               
+                <span class="ti-heart"></span>
+                <span class="ti-bookmark"></span>
+              </div> -->
+            </div>
+        </a>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="featured-btn-wrap">
+          <a href="#!/restaurants" class="btn btn-danger">VIEW ALL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- //END FEATURED PLACES -->
+
+<!--<section class="main-block light-bg">-->
+<!--    <div class="container">-->
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-md-5">-->
+<!--          <div class="styled-heading">-->
+<!--            <h3>Advertisements</h3>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="row" ng-if ="!advertisementsLoading">-->
+<!--        <div class="col-md-4 featured-responsive"  ng-repeat="advertisement in advertisements">-->
+<!--          <div class="featured-place-wrap">-->
+<!--            <a>-->
+<!--              <img src={{advertisement.image_url}} class="restaurant-image" alt="#" />-->
+<!--              &lt;!&ndash; <span class="featured-rating-orange ">{{restaurant.rating}}</span> &ndash;&gt;-->
+<!--              <div class="featured-title-box">-->
+<!--                <h6>{{ advertisement.text }}</h6>-->
+<!--                &lt;!&ndash; <p>Restaurant</p> &ndash;&gt;-->
+<!--                <span>• </span>-->
+<!--                <p>{{advertisement.posted_on}} Posted On</p>-->
+<!--          </a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="spinner" ng-if ="advertisementsLoading">-->
+<!--          <div class="double-bounce1"></div>-->
+<!--          <div class="double-bounce2"></div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+
+<!--  <section class="main-block light-bg">-->
+<!--      <div class="container">-->
+<!--        <div class="row justify-content-center">-->
+<!--          <div class="col-md-5">-->
+<!--            <div class="styled-heading">-->
+<!--              <h3>Events</h3>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row" ng-if="!eventsLoading">-->
+<!--          <div class="col-md-4 featured-responsive"  ng-repeat="event in events">-->
+<!--            <div class="featured-place-wrap">-->
+<!--              <a>-->
+<!--                &lt;!&ndash; <img src={{restaurant.image_url}} class="restaurant-image" alt="#" /> &ndash;&gt;-->
+<!--                <span class="featured-rating-orange ">{{event.price}}$</span>-->
+<!--                <div class="featured-title-box">-->
+<!--                  <h5>{{ event.name }}</h5>-->
+<!--                  <h6>{{ event.restaurant.name }}</h6>-->
+<!--                  <p>Restaurant</p>-->
+<!--                  <span>• </span>-->
+<!--                  <p>{{event.start_time}}-{{event.end_time}}</p>-->
+<!--                  <ul>-->
+<!--                    <li>-->
+<!--                      <span class="icon-location-pin"></span>-->
+<!--                      <p>{{event.restaurant.location.address1}}, {{event.restaurant.location.city}}, {{event.restaurant.location.zip_code}}</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                      <span class="icon-screen-smartphone"></span>-->
+<!--                      <p>{{event.restaurant.phone}}</p>-->
+<!--                    </li>-->
+<!--                    &lt;!&ndash; <li>-->
+<!--                      <span class="icon-link"></span>-->
+<!--                      <p>{{restaurant.url}}</p>-->
+<!--                    </li> &ndash;&gt;-->
+<!--                  </ul>-->
+<!--                  &lt;!&ndash; <div class="bottom-icons">-->
+<!--                   -->
+<!--                    <span class="ti-heart"></span>-->
+<!--                    <span class="ti-bookmark"></span>-->
+<!--                  </div> &ndash;&gt;-->
+<!--                </div>-->
+<!--            </a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="spinner" ng-if ="eventsLoading">-->
+<!--            <div class="double-bounce1"></div>-->
+<!--            <div class="double-bounce2"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
