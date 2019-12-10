@@ -10,4 +10,5 @@ In this project, the owner can create restaurants. Customer can favorite restaur
 
 The database service is local MongoDB. I use the localhost database to store the information and the connection info can be found in cs5200_fall2019_appYM/RestoFinder/data/db.js, please change the localhost address and the schema. And is listened at port 5105 on my laptop.
 
+The Youtube video link is: https://youtu.be/45oNAsukzpk
 **Please disable adblock for the website!**
